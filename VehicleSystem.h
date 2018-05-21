@@ -1,19 +1,23 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
+#include <SFML/Window.hpp>
 #include <vector>
 
+#include "Globals.h"
 #include "Vehicle.h"
 
 class VehicleSystem {
 public:
-	VehicleSystem(int count = 1);
+	VehicleSystem(unsigned int count);
 
-	void Update();
-	void Draw(sf::RenderWindow window);
+	void Update(float dt);
+	void Draw();
 
-	void AddVehicle(int count = 1);
-	void RemoveVehicle(int count = 1);
+	void AddVehicle(const unsigned int count);
+	void RemoveVehicle(unsigned int count);
 private:
 	std::vector<Vehicle> m_Vehicles;
+
+	sf::Vector2f target;
 };

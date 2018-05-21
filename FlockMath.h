@@ -1,30 +1,14 @@
 #pragma once
 #include "SFML\System.hpp"
 #include <cmath>
+#include "Globals.h"
 
 namespace FlockMath {
-	float Magnitude(const sf::Vector2f& vector) {
-		return sqrtf((vector.x * vector.x) + (vector.y * vector.y));
-	}
+	float Magnitude(const sf::Vector2f& vector);
 
-	sf::Vector2f Normalize(sf::Vector2f vector) {
-		float length = Magnitude(vector);
+	sf::Vector2f Normalize(sf::Vector2f vector);
 
-		vector.x = vector.x / length;
-		vector.y = vector.y / length;
+	void Limit(sf::Vector2f& vector, float limit);
 
-		return vector;
-	}
-
-	void Limit(sf::Vector2f& vector, float limit) {
-		if (Magnitude(vector) > limit) {
-			vector = Normalize(vector);
-			vector.x *= limit;
-			vector.y *= limit;
-		}
-	}
-
-	float Heading(const sf::Vector2f& vector) {
-		return atan2(vector.y, vector.x);
-	}
+	float Heading(const sf::Vector2f& vector);
 }

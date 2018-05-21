@@ -2,24 +2,40 @@
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
 
+#include "VehicleSystem.h"
+
+//Window to be displayed throughout game
+sf::RenderWindow window;
+
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(800, 600), "SFML works!");
+	window.create(sf::VideoMode(800, 600), "Flocking");
 
-	sf::CircleShape shape(100.f);
-	shape.setFillColor(sf::Color::Green);
+	VehicleSystem system(1);
 
+	sf::Clock clock;
 	while (window.isOpen())
 	{
+		float dt = clock.restart().asSeconds();
 		sf::Event event;
-		while (window.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
+		while (window.pollEvent(event)) {
+			switch (event.type) {
+			case sf::Event::Closed:
 				window.close();
+				break;
+
+			case sf::Event::KeyPressed:
+				if (event.key.code == sf::Keyboard::Escape) {
+					window.close();
+					break;
+				}
+				break;
+			}
 		}
+		system.Update(dt);
 
 		window.clear();
-		window.draw(shape);
+		system.Draw();
 		window.display();
 	}
 
