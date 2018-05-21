@@ -14,6 +14,7 @@ public:
 
 	//Move towards target
 	void Seek(const sf::Vector2f& target, float dt);
+	void Arrive(const sf::Vector2f& target, float dt);
 
 private:
 	sf::ConvexShape m_Shape;
@@ -24,6 +25,8 @@ private:
 
 	float m_MaxSpeed;
 	float m_MaxForce;
+
+	float m_ArriveRadius;
 
 	void ApplyForce(const sf::Vector2f& force);
 

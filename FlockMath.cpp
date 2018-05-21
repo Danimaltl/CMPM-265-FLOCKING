@@ -28,3 +28,8 @@ float FlockMath::Heading(const sf::Vector2f& vector) {
 	result = result * (180 / M_PI);
 	return result;
 }
+
+float FlockMath::Map(float value, float start1, float  stop1, float  start2, float stop2) {
+	float slope = (stop2 - start2) / (stop1 - start1);
+	return start2 + slope * (value - start1);
+}

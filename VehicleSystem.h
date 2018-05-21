@@ -19,5 +19,5 @@ public:
 private:
 	std::vector<Vehicle> m_Vehicles;
 
-	sf::Vector2f target;
+	sf::Vector2f m_Target;
 };

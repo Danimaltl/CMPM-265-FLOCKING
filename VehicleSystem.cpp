@@ -7,11 +7,12 @@ VehicleSystem::VehicleSystem(unsigned int count = 1) {
 
 void VehicleSystem::Update(float dt) {
 	sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-	target.x = (float)mousePos.x;
-	target.y = (float)mousePos.y;
+	m_Target.x = (float)mousePos.x;
+	m_Target.y = (float)mousePos.y;
 
 	for (size_t i = 0; i < m_Vehicles.size(); i++) {
-		m_Vehicles[i].Seek(target, dt);
+		//m_Vehicles[i].Seek(m_Target, dt);
+		m_Vehicles[i].Arrive(m_Target, dt);
 		m_Vehicles[i].Update(dt);
 	}
 }

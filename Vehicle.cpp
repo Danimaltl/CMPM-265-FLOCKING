@@ -15,8 +15,10 @@ Vehicle::Vehicle(sf::Vector2f position) {
 	m_Shape.setOutlineColor(sf::Color::Black);
 	m_Shape.setOrigin(sf::Vector2f(10, 10));
 
-	m_MaxSpeed = 100;
-	m_MaxForce = 20;
+	m_MaxSpeed = 400;
+	m_MaxForce = 300;
+
+	m_ArriveRadius = 100;
 }
 
 void Vehicle::Update(float dt) {
@@ -39,11 +41,30 @@ void Vehicle::Draw() {
 }
 
 void Vehicle::Seek(const sf::Vector2f& target, float dt) {
-	//printf("target: %f, %f\n", target.x, target.y);
+	
 	
 	sf::Vector2f desired = target - m_Position;
 	desired = FlockMath::Normalize(desired);
 	desired *= m_MaxSpeed;
+
+	sf::Vector2f steer = desired - m_Velocity;
+
+	FlockMath::Limit(steer, m_MaxForce);
+
+	ApplyForce(steer);
+}
+
+void Vehicle::Arrive(const sf::Vector2f& target, float dt) {
+	sf::Vector2f desired = target - m_Position;
+	float d = FlockMath::Magnitude(desired);
+	desired = FlockMath::Normalize(desired);
+	if (d < m_ArriveRadius) {
+		float m = FlockMath::Map(d, 0, m_ArriveRadius, 0, m_MaxSpeed);
+		desired *= m;
+	}
+	else {
+		desired *= m_MaxSpeed;
+	}
 
 	sf::Vector2f steer = desired - m_Velocity;
 

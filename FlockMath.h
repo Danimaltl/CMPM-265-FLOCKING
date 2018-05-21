@@ -11,4 +11,6 @@ namespace FlockMath {
 	void Limit(sf::Vector2f& vector, float limit);
 
 	float Heading(const sf::Vector2f& vector);
+
+	float Map(float value, float start1, float  stop1, float  start2, float stop2);
 }
