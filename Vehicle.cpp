@@ -1,9 +1,19 @@
-#include "Vehicle.h"
+#include "VehicleSystem.h"
 
-Vehicle::Vehicle(sf::Vector2f position, std::vector<Vehicle>* vehicles) {
+Vehicle::Vehicle(sf::Vector2f position, VehicleSystem* system) {
+	m_MaxSpeed = 350;
+	m_MaxForce = 300;
 	m_Acceleration = sf::Vector2f(0, 0);
 	m_Velocity = sf::Vector2f(0, 0);
+	FlockMath::Limit(m_Velocity, m_MaxSpeed);
 	m_Position = position;
+
+	m_ArriveRadius = 100;
+	m_NeighborRadius = 100;
+
+	m_System = system;
+	m_Vehicles = &m_System->m_Vehicles;
+	
 
 	//Set shape attributes
 	m_Shape.setPointCount(3);
@@ -12,23 +22,15 @@ Vehicle::Vehicle(sf::Vector2f position, std::vector<Vehicle>* vehicles) {
 	m_Shape.setPoint(2, sf::Vector2f(0, 20));
 	m_Shape.setFillColor(sf::Color(31, 84, 145));
 	m_Shape.setOutlineThickness(1);
-	m_Shape.setOutlineColor(sf::Color(100,100,100));
+	m_Shape.setOutlineColor(sf::Color(100, 100, 100));
 	m_Shape.setOrigin(sf::Vector2f(10, 10));
 	m_Shape.setPosition(m_Position);
-
-	m_MaxSpeed = 350;
-	m_MaxForce = 300;
-
-	m_ArriveRadius = 100;
-	m_NeighborRadius = 50;
-
-	m_Vehicles = vehicles;
 }
 
 void Vehicle::Update(float dt) {
-	ApplyForce(ComputeSeparation() * 1.5f);
-	ApplyForce(ComputeAlignment());
-	ApplyForce(ComputeAlignment() * .8f);
+	ApplyForce(ComputeSeparation() * m_System->m_Separation * m_System->m_SepToggle);
+	ApplyForce(ComputeAlignment() * m_System->m_Alignment * m_System->m_AlToggle);
+	ApplyForce(ComputeCohesion() * m_System->m_Cohesion * m_System->m_CoToggle);
 
 	m_Velocity += m_Acceleration * dt;
 	FlockMath::Limit(m_Velocity, m_MaxSpeed);
@@ -90,7 +92,7 @@ void Vehicle::Arrive(const sf::Vector2f& target) {
 
 	FlockMath::Limit(steer, m_MaxForce);
 
-	ApplyForce(steer);
+	ApplyForce(steer * .5f);
 }
 
 void Vehicle::ApplyForce(const sf::Vector2f& force) {
@@ -119,7 +121,7 @@ sf::Vector2f Vehicle::ComputeSeparation() {
 	}
 
 	if (count == 0) {
-		printf("Count is 0\n");
+		//printf("Count is 0\n");
 		return sf::Vector2f(0, 0);
 	}
 	desired = desired / count;
@@ -145,15 +147,22 @@ sf::Vector2f Vehicle::ComputeAlignment() {
 		if (current == this)
 			continue;
 
-		float d = FlockMath::Magnitude(m_Position - current->m_Position);
-		if (d < m_NeighborRadius) {
+		float dot = FlockMath::Dot(FlockMath::Normalize(m_Position - current->m_Position), FlockMath::Normalize(m_Velocity));
+
+		float angleBetween = FlockMath::AngleBetween(m_Position - current->m_Position, m_Velocity);
+
+		//if (dot < 0.7071) continue;
+		if (angleBetween > 45) continue;
+
+		float distance = FlockMath::Magnitude(m_Position - current->m_Position);
+		if (distance < m_NeighborRadius) {
 			desired += current->m_Velocity;
 			count++;
 		}
 	}
 
 	if (count == 0) {
-		printf("Count is 0\n");
+		//printf("Count is 0\n");
 		return sf::Vector2f(0, 0);
 	}
 	desired = desired / count;
@@ -187,7 +196,7 @@ sf::Vector2f Vehicle::ComputeCohesion() {
 	}
 
 	if (count == 0) {
-		printf("Count is 0\n");
+		//printf("Count is 0\n");
 		return sf::Vector2f(0, 0);
 	}
 	desired = desired / count;

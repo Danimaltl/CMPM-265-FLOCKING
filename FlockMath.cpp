@@ -23,9 +23,17 @@ void FlockMath::Limit(sf::Vector2f& vector, float limit) {
 	}
 }
 
+float FlockMath::Dot(sf::Vector2f v1, sf::Vector2f v2) {
+	return v1.x*v2.x + v1.y + v2.y;
+}
+
+float FlockMath::AngleBetween(sf::Vector2f v1, sf::Vector2f v2) {
+	return acos(Dot(v1, v2) / (Magnitude(v1) * Magnitude(v2)));
+}
+
 float FlockMath::Heading(const sf::Vector2f& vector) {
 	float result = atan2(vector.y, vector.x);
-	result = result * (180 / M_PI);
+	result = result * (float)(180 / M_PI);
 	return result;
 }
 
