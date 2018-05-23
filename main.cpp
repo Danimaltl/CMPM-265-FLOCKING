@@ -9,7 +9,10 @@ sf::RenderWindow window;
 
 int main()
 {
-	window.create(sf::VideoMode(800, 600), "Flocking");
+	sf::ContextSettings settings;
+	settings.antialiasingLevel = 8;
+
+	window.create(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Flocking", sf::Style::Default, settings);
 
 	VehicleSystem system(1);
 

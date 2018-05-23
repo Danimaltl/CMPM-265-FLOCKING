@@ -7,14 +7,21 @@
 
 class Vehicle {
 public:
-	Vehicle(sf::Vector2f position);
+	Vehicle(sf::Vector2f position, std::vector<Vehicle>* vehicles);
 
 	void Update(float dt);
 	void Draw();
 
 	//Move towards target
-	void Seek(const sf::Vector2f& target, float dt);
-	void Arrive(const sf::Vector2f& target, float dt);
+	void Seek(const sf::Vector2f& target);
+	void Arrive(const sf::Vector2f& target);
+	sf::Vector2f ComputeSeparation();
+
+	sf::Vector2f ComputeAlignment();
+
+	sf::Vector2f ComputeCohesion();
+
+	std::vector<Vehicle>* m_Vehicles;
 
 private:
 	sf::ConvexShape m_Shape;
@@ -27,7 +34,7 @@ private:
 	float m_MaxForce;
 
 	float m_ArriveRadius;
+	float m_NeighborRadius;
 
 	void ApplyForce(const sf::Vector2f& force);
-
 };

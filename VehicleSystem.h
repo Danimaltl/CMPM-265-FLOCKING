@@ -14,10 +14,13 @@ public:
 	void Update(float dt);
 	void Draw();
 
-	void AddVehicle(const unsigned int count);
+	void AddVehicle(const unsigned int count, sf::Vector2f position);
 	void RemoveVehicle(unsigned int count);
-private:
+	
 	std::vector<Vehicle> m_Vehicles;
 
+private:
 	sf::Vector2f m_Target;
+
+	bool m_MousePressed = false;
 };
