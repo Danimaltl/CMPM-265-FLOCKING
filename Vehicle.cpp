@@ -1,7 +1,7 @@
 #include "VehicleSystem.h"
 
 Vehicle::Vehicle(sf::Vector2f position, VehicleSystem* system) {
-	m_MaxSpeed = 350;
+	m_MaxSpeed = 400;
 	m_MaxForce = 300;
 	m_Acceleration = sf::Vector2f(0, 0);
 	m_Velocity = sf::Vector2f(0, 0);
@@ -9,7 +9,7 @@ Vehicle::Vehicle(sf::Vector2f position, VehicleSystem* system) {
 	m_Position = position;
 
 	m_ArriveRadius = 100;
-	m_NeighborRadius = 100;
+	m_NeighborRadius = 75;
 
 	m_System = system;
 	m_Vehicles = &m_System->m_Vehicles;
@@ -31,25 +31,26 @@ void Vehicle::Update(float dt) {
 	ApplyForce(ComputeSeparation() * m_System->m_Separation * m_System->m_SepToggle);
 	ApplyForce(ComputeAlignment() * m_System->m_Alignment * m_System->m_AlToggle);
 	ApplyForce(ComputeCohesion() * m_System->m_Cohesion * m_System->m_CoToggle);
+	ApplyForce(WallsForce() * 2.0f);
 
 	m_Velocity += m_Acceleration * dt;
 	FlockMath::Limit(m_Velocity, m_MaxSpeed);
 	m_Position += m_Velocity * dt;
 	m_Acceleration = m_Acceleration * 0.0f; //reset so forces don't continue when stopped
 
-	if (m_Position.x > SCREEN_WIDTH) {
-		m_Position.x -= SCREEN_WIDTH;
-	}
-	else if (m_Position.x < 0) {
-		m_Position.x += SCREEN_WIDTH;
-	}
+	//if (m_Position.x > SCREEN_WIDTH) {
+	//	m_Position.x -= SCREEN_WIDTH;
+	//}
+	//else if (m_Position.x < 0) {
+	//	m_Position.x += SCREEN_WIDTH;
+	//}
 
-	if (m_Position.y > SCREEN_HEIGHT) {
-		m_Position.y -= SCREEN_HEIGHT;
-	}
-	else if (m_Position.y < 0) {
-		m_Position.y += SCREEN_HEIGHT;
-	}
+	//if (m_Position.y > SCREEN_HEIGHT) {
+	//	m_Position.y -= SCREEN_HEIGHT;
+	//}
+	//else if (m_Position.y < 0) {
+	//	m_Position.y += SCREEN_HEIGHT;
+	//}
 	//printf("m_Position: %f, %f\n", m_Position.x, m_Position.y);
 	//printf("m_Velocity: %f, %f\n", m_Velocity.x, m_Velocity.y);
 
@@ -97,6 +98,32 @@ void Vehicle::Arrive(const sf::Vector2f& target) {
 
 void Vehicle::ApplyForce(const sf::Vector2f& force) {
 	m_Acceleration += force;
+}
+
+sf::Vector2f Vehicle::WallsForce() {
+	sf::Vector2f desired;
+	sf::Vector2f steer(0,0);
+	if (m_Position.x < 50) {
+		desired = sf::Vector2f(m_MaxSpeed, m_Velocity.y);
+		steer += desired - m_Velocity;
+		FlockMath::Limit(steer, m_MaxForce);
+	}
+	else if (m_Position.x > (SCREEN_WIDTH - 50)) {
+		desired = sf::Vector2f(-m_MaxSpeed, m_Velocity.y);
+		steer += desired - m_Velocity;
+		FlockMath::Limit(steer, m_MaxForce);
+	}
+	if (m_Position.y < 25) {
+		desired = sf::Vector2f(m_Velocity.x, m_MaxSpeed);
+		steer += desired - m_Velocity;
+		FlockMath::Limit(steer, m_MaxForce);
+	}
+	else if (m_Position.y > (SCREEN_HEIGHT - 50)) {
+		desired = sf::Vector2f(m_Velocity.x, -m_MaxSpeed);
+		steer += desired - m_Velocity;
+		FlockMath::Limit(steer, m_MaxForce);
+	}
+	return steer;
 }
 
 sf::Vector2f Vehicle::ComputeSeparation() {

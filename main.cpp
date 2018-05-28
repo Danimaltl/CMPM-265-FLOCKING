@@ -14,7 +14,7 @@ int main()
 
 	window.create(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Flocking", sf::Style::Default, settings);
 
-	VehicleSystem system(1);
+	VehicleSystem system(100);
 
 	sf::Clock clock;
 	while (window.isOpen())

@@ -18,11 +18,6 @@ public:
 	//Move towards target
 	void Seek(const sf::Vector2f& target);
 	void Arrive(const sf::Vector2f& target);
-	sf::Vector2f ComputeSeparation();
-
-	sf::Vector2f ComputeAlignment();
-
-	sf::Vector2f ComputeCohesion();
 
 	VehicleSystem* m_System;
 	std::vector<Vehicle>* m_Vehicles;
@@ -41,6 +36,11 @@ private:
 	float m_NeighborRadius;
 
 	void ApplyForce(const sf::Vector2f& force);
+
+	sf::Vector2f ComputeSeparation();
+	sf::Vector2f ComputeAlignment();
+	sf::Vector2f ComputeCohesion();
+	sf::Vector2f WallsForce();
 };
 
 class VehicleSystem {
@@ -65,6 +65,9 @@ public:
 
 private:
 	sf::Vector2f m_Target;
+
+	sf::Font m_Font;
+	sf::Text m_Text;
 
 	bool m_MousePressed = false;
 	bool m_KeyPressed = false;
