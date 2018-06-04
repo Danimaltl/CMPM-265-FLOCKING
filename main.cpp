@@ -16,6 +16,18 @@ int main()
 
 	VehicleSystem system(100);
 
+	sf::Sprite renderSprite;
+
+	sf::Texture renderTexture;
+	renderTexture.create(SCREEN_WIDTH, SCREEN_HEIGHT);
+
+	sf::Shader shader;
+	shader.loadFromFile("shader.frag", sf::Shader::Fragment);
+	shader.setUniform("resolution", sf::Glsl::Vec2(1280, 720));
+	shader.setUniform("texture", sf::Shader::CurrentTexture);
+
+	float time = 0;
+
 	sf::Clock clock;
 	while (window.isOpen())
 	{
@@ -36,9 +48,13 @@ int main()
 			}
 		}
 		system.Update(dt);
-
+		time += dt;
+		shader.setUniform("time", time);
 		window.clear();
 		system.Draw();
+		renderTexture.update(window);
+		renderSprite.setTexture(renderTexture);
+		window.draw(renderSprite, &shader);
 		window.display();
 	}
 
