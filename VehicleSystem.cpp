@@ -88,7 +88,7 @@ void VehicleSystem::Draw() {
 		m_Vehicles[i].Draw();
 	}
 	m_Text.setOrigin(m_Text.getGlobalBounds().width / 2, m_Text.getGlobalBounds().height / 2);
-	window.draw(m_Text);
+	//window.draw(m_Text);
 }
 
 void VehicleSystem::AddVehicle(const unsigned int count = 1, sf::Vector2f position = sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)) {

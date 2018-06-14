@@ -1,6 +1,11 @@
+
+
 uniform sampler2D texture;
 uniform float time;
 uniform vec2 resolution;
+
+uniform float kval;
+uniform float kcubeval;
 
 //RADIUS of our vignette, where 0.5 results in a circle fitting the screen
 const float RADIUS = 0.1;
@@ -44,10 +49,10 @@ void main()
     vec4 pixel;
 
 	// lens distortion coefficient (between
-    float k = 40 * cos(time); //cos(time * (time/2) ) * 50 + 100;
+    float k = kval;//40 * cos(time); //cos(time * (time/2) ) * 50 + 100;
        
     // cubic distortion value
-    float kcube = -400 ;
+    float kcube = kcubeval; ;
        
        
     float r2 = (gl_TexCoord[0].x-0.5) * (gl_TexCoord[0].x-0.5) + (gl_TexCoord[0].y-0.5) * (gl_TexCoord[0].y-0.5);       

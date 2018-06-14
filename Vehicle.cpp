@@ -103,22 +103,22 @@ void Vehicle::ApplyForce(const sf::Vector2f& force) {
 sf::Vector2f Vehicle::WallsForce() {
 	sf::Vector2f desired;
 	sf::Vector2f steer(0,0);
-	if (m_Position.x < 50) {
+	if (m_Position.x < 100) {
 		desired = sf::Vector2f(m_MaxSpeed, m_Velocity.y);
 		steer += desired - m_Velocity;
 		FlockMath::Limit(steer, m_MaxForce);
 	}
-	else if (m_Position.x > (SCREEN_WIDTH - 50)) {
+	else if (m_Position.x > (SCREEN_WIDTH - 100)) {
 		desired = sf::Vector2f(-m_MaxSpeed, m_Velocity.y);
 		steer += desired - m_Velocity;
 		FlockMath::Limit(steer, m_MaxForce);
 	}
-	if (m_Position.y < 25) {
+	if (m_Position.y < 100) {
 		desired = sf::Vector2f(m_Velocity.x, m_MaxSpeed);
 		steer += desired - m_Velocity;
 		FlockMath::Limit(steer, m_MaxForce);
 	}
-	else if (m_Position.y > (SCREEN_HEIGHT - 50)) {
+	else if (m_Position.y > (SCREEN_HEIGHT - 100)) {
 		desired = sf::Vector2f(m_Velocity.x, -m_MaxSpeed);
 		steer += desired - m_Velocity;
 		FlockMath::Limit(steer, m_MaxForce);
