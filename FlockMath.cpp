@@ -24,7 +24,7 @@ void FlockMath::Limit(sf::Vector2f& vector, float limit) {
 }
 
 float FlockMath::Dot(sf::Vector2f v1, sf::Vector2f v2) {
-	return v1.x*v2.x + v1.y + v2.y;
+	return v1.x*v2.x + v1.y*v2.y;
 }
 
 float FlockMath::AngleBetween(sf::Vector2f v1, sf::Vector2f v2) {
